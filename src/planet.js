@@ -10,7 +10,7 @@ function createPlanetState({ bounds, scents }) {
 
   return {
     bounds: [bounds[0], bounds[1]],
-    scents: [...scents],
+    scents: scents ? [...scents] : [],
   };
 }
 
