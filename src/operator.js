@@ -18,11 +18,6 @@ function executeMoveInstruction({robotState, planetState}){
     }
   }
 
-  const beforeMovePlanetState = depositScent({
-    robotState: initialRobotState,
-    planetState: initialPlanetState
-  });
-
   const afterMoveRobotState = moveRobot({robotState: initialRobotState});
 
   const robotInFatalPositionAfterMove = isPositionFatal({
@@ -32,7 +27,10 @@ function executeMoveInstruction({robotState, planetState}){
 
   if (robotInFatalPositionAfterMove) {
     return {
-      planetState: beforeMovePlanetState,
+      planetState: depositScent({
+        robotState: initialRobotState,
+        planetState: initialPlanetState
+      }),
       robotState: createRobotState({...initialRobotState, lost: true})
     } 
   } else {
