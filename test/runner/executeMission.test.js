@@ -1,9 +1,9 @@
 const test = require('ava');
-const {missionScript} = require('./_modelMission');
+const { missionScript } = require('./_modelMission');
 const { executeMission } = require('../../src/runner');
 
-test('Executes a complete mission', t => {
-	const finalState = executeMission(missionScript);
+test('Executes a complete mission', (t) => {
+  const finalState = executeMission(missionScript);
 
   const [robot1, robot2, robot3] = finalState.robots;
 
