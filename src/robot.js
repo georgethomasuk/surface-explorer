@@ -11,7 +11,7 @@ const COMPASS_POINT_COUNT = COMPASS_POINTS.length;
  * @param  {string}   orientation     initial orientation of the robot (N,E,S,W)
  * @return {Object}					          a robot state object
  */
-function createRobotState({ position, orientation }) {
+function createRobotState({ position, orientation, lost, blocked }) {
   if (COMPASS_POINTS.includes(orientation) === false) {
     throw new InstructionInvalidError(`Orientation is not valid: "${orientation}"`);
   }
@@ -19,6 +19,8 @@ function createRobotState({ position, orientation }) {
   return {
     position: [...position],
     orientation: orientation,
+    lost: lost || false,
+    blocked: blocked || false
   };
 }
 
@@ -53,7 +55,6 @@ function rotateRobot({ robotState, instruction }) {
  * @return {Object}                 a robot state object
  */
 function moveRobot({ robotState }) {
-  console.log(robotState.orientation);
   const newPosition = MOVEMENTS[robotState.orientation](robotState.position);
   return createRobotState({...robotState, position: newPosition});
 }
