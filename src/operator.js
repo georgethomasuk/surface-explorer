@@ -14,7 +14,7 @@ function executeMoveInstruction({robotState, planetState}){
   if (blockedByScent) {
     return {
       planetState: initialPlanetState,
-      robotState: createRobotState({...initialRobotState, blocked: true})
+      robotState: initialRobotState
     }
   }
 
