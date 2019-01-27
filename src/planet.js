@@ -77,28 +77,11 @@ function depositScent({ planetState, robotState }) {
   return newPlanetState;
 }
 
-/**
- * Generate a new planet state without a scent for the next move
- * the robot will make
- * @param  {Object}  planetState
- * @param  {Object}  robotState
- * @return {Object}             A new planet state
- */
-function removeScent({ planetState, robotState }) {
-  const scentIdentifier = generateScentIdentifier({ robotState });
-
-  const newPlanetState = createPlanetState(planetState);
-
-  newPlanetState.scents = newPlanetState.scents.filter(scent => scent !== scentIdentifier);
-  return newPlanetState;
-}
-
 
 module.exports = {
   generateScentIdentifier,
   isMovementBlockedByScent,
   createPlanetState,
   isPositionFatal,
-  depositScent,
-  removeScent,
+  depositScent
 };
