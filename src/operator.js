@@ -1,3 +1,4 @@
+const { InstructionInvalidError } = require('./error');
 const { createRobotState, rotateRobot, moveRobot } = require('./robot');
 const { isPositionFatal, isMovementBlockedByScent, depositScent, removeScent } = require('./planet');
 
@@ -44,42 +45,43 @@ function executeMoveInstruction({robotState, planetState}){
 }
 
 function executeRotateInstruction({instruction, robotState, planetState}){
-
+  return {
+    planetState,
+    robotState: rotateRobot({robotState, instruction})
+  }
 }
 
 
-function executeInstructionOnRobot({instruction, robotState, planetState}){
+function executeInstruction({instruction, robotState, planetState}){
   switch(instruction){
   case 'F':
-    return moveRobot
-    break;
+    return executeMoveInstruction({instruction, robotState, planetState});
+  case 'L':
+  case 'R':
+    return executeRotateInstruction({instruction, robotState, planetState});
+  default:
+    throw new InstructionInvalidError(`Movement instruction is not valid: "${instruction}"`);
   }
 }
 
 function executeRobotMission({ planetState, mission }) {
   const initialRobotState = createRobotState(mission.initial);
 
-  // mission.instructions.reduce()
+  const finalState = mission.instructions.reduce((latestState, instruction) => {
 
+    if (latestState.robotState.blocked || latestState.robotState.lost) {
+      return latestState;
+    } else {
+      return executeInstruction({instruction, ...latestState});
+    }
 
-  // mission.commands.re
+  }, {planetState, robotState: initialRobotState});
 
-  // Create the initial state of the robot
-  // Iterate over the commands
-  // Deploy scent
-  // Move the robot
-  // Check if position is off world
-  // If off world the declare such and cease commands
-  // If on world remove the scent
-  // Return the latest planet and robot state
-
-  return {
-    planetState,
-    robotState: initialRobotState
-  }
+  return finalState;
 }
 
 module.exports = {
   executeRobotMission,
+  executeRotateInstruction,
   executeMoveInstruction
 };

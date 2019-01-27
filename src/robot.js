@@ -1,26 +1,27 @@
 const MOVEMENTS = require('./movements');
-
-class InstructionInvalidError extends Error {}
+const { InstructionInvalidError } = require('./error');
 
 const COMPASS_POINTS = ['N', 'E', 'S', 'W'];
 const COMPASS_POINT_COUNT = COMPASS_POINTS.length;
 
 /**
  * Generate an intial state for the robot based on input params
- * @param  {number[]} position 		    initial coordinates of the robot
+ * @param  {number[]} position        initial coordinates of the robot
  * @param  {string}   orientation     initial orientation of the robot (N,E,S,W)
- * @return {Object}					          a robot state object
+ * @return {Object}                   a robot state object
  */
-function createRobotState({ position, orientation, lost, blocked }) {
+function createRobotState({
+  position, orientation, lost, blocked,
+}) {
   if (COMPASS_POINTS.includes(orientation) === false) {
     throw new InstructionInvalidError(`Orientation is not valid: "${orientation}"`);
   }
 
   return {
     position: [...position],
-    orientation: orientation,
+    orientation,
     lost: lost || false,
-    blocked: blocked || false
+    blocked: blocked || false,
   };
 }
 
@@ -46,7 +47,7 @@ function rotateRobot({ robotState, instruction }) {
   const newOrientation = COMPASS_POINTS[newOrientationIndex];
 
 
-  return createRobotState({...robotState, orientation: newOrientation});
+  return createRobotState({ ...robotState, orientation: newOrientation });
 }
 
 /**
@@ -56,7 +57,7 @@ function rotateRobot({ robotState, instruction }) {
  */
 function moveRobot({ robotState }) {
   const newPosition = MOVEMENTS[robotState.orientation](robotState.position);
-  return createRobotState({...robotState, position: newPosition});
+  return createRobotState({ ...robotState, position: newPosition });
 }
 
 
@@ -65,5 +66,5 @@ module.exports = {
   rotateRobot,
   moveRobot,
   InstructionInvalidError,
-  COMPASS_POINTS
+  COMPASS_POINTS,
 };
