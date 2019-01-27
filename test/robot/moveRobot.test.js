@@ -1,5 +1,4 @@
 const test = require('ava');
-const sinon = require('sinon');
 const { moveRobot } = require('../../src/robot');
 
 test('Generates a new robot state, applying the movement to the current position', (t) => {
@@ -7,12 +6,11 @@ test('Generates a new robot state, applying the movement to the current position
 
   const initialRobotState = {
     position: [3, 3],
-    forwardMovement: sinon.stub().returns(expectedNewPosition),
+    orientation: 'S',
   };
 
   const finalRobotState = moveRobot({ robotState: initialRobotState });
 
-  t.truthy(initialRobotState.forwardMovement.calledWith(initialRobotState.position));
-  t.deepEqual(finalRobotState.position, expectedNewPosition);
-  t.is(finalRobotState.forwardMovement, initialRobotState.forwardMovement);
+  t.deepEqual(finalRobotState.position, [3, 2]);
+  t.is(finalRobotState.orientation, initialRobotState.orientation);
 });
