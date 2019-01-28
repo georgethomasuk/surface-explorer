@@ -7,7 +7,7 @@ const LEFT = 'L';
 function verifyRotation(t, { initial, direction, expected }) {
   const robotState = {
     orientation: initial,
-    position: [0,0]
+    position: [0, 0],
   };
 
   const finalRobotState = rotateRobot({ robotState, instruction: direction });

@@ -1,64 +1,64 @@
 const { InstructionInvalidError } = require('./error');
 const { createRobotState, rotateRobot, moveRobot } = require('./robot');
-const { isPositionFatal, isMovementBlockedByScent, depositScent, removeScent } = require('./planet');
+const {
+  isPositionFatal, isMovementBlockedByScent, depositScent, removeScent,
+} = require('./planet');
 
-function executeMoveInstruction({robotState, planetState}){
+function executeMoveInstruction({ robotState, planetState }) {
   const initialRobotState = robotState;
   const initialPlanetState = planetState;
 
   const blockedByScent = isMovementBlockedByScent({
     robotState: initialRobotState,
-    planetState: initialPlanetState
+    planetState: initialPlanetState,
   });
 
   if (blockedByScent) {
     return {
       planetState: initialPlanetState,
-      robotState: initialRobotState
-    }
+      robotState: initialRobotState,
+    };
   }
 
-  const afterMoveRobotState = moveRobot({robotState: initialRobotState});
+  const afterMoveRobotState = moveRobot({ robotState: initialRobotState });
 
   const robotInFatalPositionAfterMove = isPositionFatal({
     planetState: initialPlanetState,
-    position: afterMoveRobotState.position
+    position: afterMoveRobotState.position,
   });
 
   if (robotInFatalPositionAfterMove) {
     return {
       planetState: depositScent({
         robotState: initialRobotState,
-        planetState: initialPlanetState
+        planetState: initialPlanetState,
       }),
-      robotState: createRobotState({...initialRobotState, lost: true})
-    } 
-  } else {
-    return {
-      planetState: initialPlanetState,
-      robotState: afterMoveRobotState
-    }
+      robotState: createRobotState({ ...initialRobotState, lost: true }),
+    };
   }
-
+  return {
+    planetState: initialPlanetState,
+    robotState: afterMoveRobotState,
+  };
 }
 
-function executeRotateInstruction({instruction, robotState, planetState}){
+function executeRotateInstruction({ instruction, robotState, planetState }) {
   return {
     planetState,
-    robotState: rotateRobot({robotState, instruction})
-  }
+    robotState: rotateRobot({ robotState, instruction }),
+  };
 }
 
 
-function executeInstruction({instruction, robotState, planetState}){
-  switch(instruction){
-  case 'F':
-    return executeMoveInstruction({instruction, robotState, planetState});
-  case 'L':
-  case 'R':
-    return executeRotateInstruction({instruction, robotState, planetState});
-  default:
-    throw new InstructionInvalidError(`Movement instruction is not valid: "${instruction}"`);
+function executeInstruction({ instruction, robotState, planetState }) {
+  switch (instruction) {
+    case 'F':
+      return executeMoveInstruction({ instruction, robotState, planetState });
+    case 'L':
+    case 'R':
+      return executeRotateInstruction({ instruction, robotState, planetState });
+    default:
+      throw new InstructionInvalidError(`Movement instruction is not valid: "${instruction}"`);
   }
 }
 
@@ -66,14 +66,11 @@ function executeRobotMission({ planetState, mission }) {
   const initialRobotState = createRobotState(mission.initial);
 
   const finalState = mission.instructions.reduce((latestState, instruction) => {
-
     if (latestState.robotState.blocked || latestState.robotState.lost) {
       return latestState;
-    } else {
-      return executeInstruction({instruction, ...latestState});
     }
-
-  }, {planetState, robotState: initialRobotState});
+    return executeInstruction({ instruction, ...latestState });
+  }, { planetState, robotState: initialRobotState });
 
   return finalState;
 }
@@ -81,5 +78,5 @@ function executeRobotMission({ planetState, mission }) {
 module.exports = {
   executeRobotMission,
   executeRotateInstruction,
-  executeMoveInstruction
+  executeMoveInstruction,
 };

@@ -37,8 +37,8 @@ test('Should navigate the robot along a route that is all on world', (t) => {
       orientation: 'E',
       lost: false,
     },
-    planet: planetState
-  }
+    planet: planetState,
+  };
 
   const finalState = executeRobotMission({ planetState, mission });
 
@@ -71,9 +71,9 @@ test('Should navigate the robot along a route that takes it off world', (t) => {
     },
     planet: {
       bounds: planetState.bounds,
-      scents: ['3-3-N']
-    }
-  }
+      scents: ['3-3-N'],
+    },
+  };
 
   const finalState = executeRobotMission({ planetState, mission });
 
@@ -99,16 +99,16 @@ test('Should complete this other mission', (t) => {
   };
 
   const expectedState = {
-  	robot: {
-	    position: [2, 3],
-	    orientation: 'S',
-	    lost: false,
+    robot: {
+      position: [2, 3],
+      orientation: 'S',
+      lost: false,
     },
     planet: {
       bounds: planetState.bounds,
-      scents: ['3-3-N']
-    }
-	}
+      scents: ['3-3-N'],
+    },
+  };
 
   const finalState = executeRobotMission({ planetState, mission });
 

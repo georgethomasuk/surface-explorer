@@ -20,7 +20,7 @@ function createRobotState({
   return {
     position: [...position],
     orientation,
-    lost: lost || false
+    lost: lost || false,
   };
 }
 

@@ -83,5 +83,5 @@ module.exports = {
   isMovementBlockedByScent,
   createPlanetState,
   isPositionFatal,
-  depositScent
+  depositScent,
 };
