@@ -1,4 +1,5 @@
 const MOVEMENTS = require('./movements');
+const { InstructionInvalidError } = require('./error');
 
 /**
  * @param  {Number[]}   bounds    An xy coordinate of the upper right bound of the planet
@@ -6,7 +7,9 @@ const MOVEMENTS = require('./movements');
  * @return {Object}               A planet state object
  */
 function createPlanetState({ bounds, scents }) {
-  // Throw error if bounds are greater than 50
+  if (bounds[0] > 50 || bounds[1] > 50) {
+    throw new InstructionInvalidError('Planet bounds cannot exceed 50 on any axis');
+  }
 
   return {
     bounds: [bounds[0], bounds[1]],
