@@ -1,9 +1,14 @@
 const { createPlanetState } = require('./planet');
 const { executeRobotMission } = require('./operator');
 
+/**
+ * Complete a complete mission from initialising a planet and operating all required
+ * robots over the surface
+ * @param  {Object}  instruction
+ * @return {Object}                      The final state of the planet and all robots on it
+ */
 function executeMission(instructions) {
   const initialPlanetState = createPlanetState({ bounds: instructions.bounds });
-
 
   const finalState = instructions.robotMissions.reduce((initialState, robotMission) => {
     const latestState = executeRobotMission({
@@ -23,10 +28,21 @@ function executeMission(instructions) {
   return finalState;
 }
 
+/**
+ * Produce a string describing the final state of all the robots after a mission
+ * @param  {Object}  finalState           The final state of the planet and robots
+ * @return {String[]}
+ */
 function generateMissionSummary(finalState) {
   return finalState.robots.map(robotState => `${robotState.position[0]} ${robotState.position[1]} ${robotState.orientation}${robotState.lost ? ' LOST' : ''}`);
 }
 
+/**
+ * A basic method to extract the starting position and movement sequences from raw instruction input
+ * @param  {String} initialLine
+ * @param  {String} instructionLine
+ * @return {Object}
+ */
 function parseRobotInstructions([initialLine, instructionLine]) {
   const initial = initialLine.split(' ');
   return {
@@ -38,6 +54,11 @@ function parseRobotInstructions([initialLine, instructionLine]) {
   };
 }
 
+/**
+ * A basic and very brittle method to parse a full set of instructions from their raw input
+ * @param  {String}  instructionString
+ * @return {Object}
+ */
 function parseInstructions(instructionString) {
   const lines = instructionString.split(/\r?\n/).filter(line => line.length > 1);
 
